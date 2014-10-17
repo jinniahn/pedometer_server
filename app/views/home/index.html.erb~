@@ -1,0 +1,14 @@
+<h1>Pemometer</h1>
+
+<div class="jumbotron">
+  <h1>Hello, world!</h1>
+  <p>...</p>
+  <p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p>
+</div>
+
+<%= form_tag '/login', :action=> :get do %>
+<%= text_field_tag :username, 'User Name' %>
+
+<%= button_tag "LOGIN" %>
+
+<% end %>

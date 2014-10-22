@@ -1,0 +1,107 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <%= render :partial=>"steps_nav" %>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <h1 class="page-header">Dashboard</h1>
+
+      <h2 class="sub-header">Analyze Data</h2>
+      <div class="container">
+	<div class="row">
+	  <div id="graph" class="col-xs-12">
+	    
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  
+</style>
+
+
+<% content_for :js_part do %>
+<%= javascript_tag do %>
+(function(d3,$){
+    
+    var render = function(data){
+	var margin = {top: 40, right: 40, bottom: 40, left:40},
+	width = 600,
+	height = 500;
+
+	var begin_of_date = new Date(Date.parse(data[0]["date"]));
+	begin_of_date.setMinutes(0);
+	begin_of_date.setSeconds(0);
+
+	var end_of_date = new Date(begin_of_date)
+	end_of_date.setMinutes(59);
+	end_of_date.setSeconds(59);
+
+	var x = d3.time.scale()
+	    .domain([begin_of_date, end_of_date])
+	    .rangeRound([0, width - margin.left - margin.right]);
+
+	var y = d3.scale.linear()
+	    .domain([0, d3.max(data, function(d) { return d.total_of_steps; })])
+	    .range([height - margin.top - margin.bottom, 0]);
+
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient('bottom')
+	    .ticks(d3.time.minutes, 10)
+	    .tickFormat(d3.time.format('%M'))
+	    .tickSize(0)
+	    .tickPadding(8);
+
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient('left')
+	    .tickPadding(8);
+
+	var svg = d3.select('#graph').append('svg')
+	    .attr('class', 'chart')
+	    .attr('width', width)
+	    .attr('height', height)
+	    .append('g')
+	    .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+	svg.selectAll('.chart')
+	    .data(data)
+	    .enter().append('rect')
+	    .attr('class', 'bar')
+	    .attr('x', function(d) { return x(new Date(d.date)); })
+	    .attr('y', function(d) { return height - margin.top - margin.bottom - (height - margin.top - margin.bottom - y(d.total_of_steps)) })
+	    .attr('width', 10)
+	    .attr('height', function(d) { return height - margin.top - margin.bottom - y(d.total_of_steps) });
+
+	svg.append('g')
+	    .attr('class', 'x axis')
+	    .attr('transform', 'translate(0, ' + (height - margin.top - margin.bottom) + ')')
+	    .call(xAxis);
+
+	svg.append('g')
+	    .attr('class', 'y axis')
+	    .call(yAxis);
+    };
+
+    var token = $( 'd4meta[name="csrf-token"]' ).attr( 'content' );
+    var data = []
+
+    var today = new Date
+
+    var date=today.getFullYear()+"-"+(today.getMonth()+1)+"-"+today.getDate()+" "+today.getHours()+":00:00"
+
+    d3.json('/steps/graph/hours.json?date='+date)
+    	.header("X-CSRF-Token", token)
+    	.header("Content-Type", "application/json")
+    	.get(function(err, raw){
+	    render(raw);
+    	});
+
+})(d3, jQuery);
+
+<% end %>
+<% end %>

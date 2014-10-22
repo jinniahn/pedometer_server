@@ -29,7 +29,10 @@
           <!--   </div> -->
           <!-- </div> -->
 
-          <h2 class="sub-header">Section title</h2>
+          <h2 class="sub-header">Data</h2>
+	  <div class="buttons">
+	    <a href="/steps/clear" class="pull-right">RESET DATA</a>
+	  </div>
           <div class="table-responsive">
             <table class="table table-striped">
   <thead>
@@ -47,8 +50,8 @@
         <td><%= step.time %></td>
         <td><%= step.period %></td>
         <td><%= step.steps %></td>
-        <td><%= link_to 'Show', step %></td>
-        <td><%= link_to 'Edit', edit_step_path(step) %></td>
+        <!-- <td><%= link_to 'Show', step %></td> -->
+        <!-- <td><%= link_to 'Edit', edit_step_path(step) %></td> -->
         <td><%= link_to 'Destroy', step, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>

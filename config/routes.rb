@@ -3,7 +3,12 @@ Rails.application.routes.draw do
   devise_for :users
 
   root 'home#index'
+
+  get  'steps/clear'
+  get  'steps/graph/hours' => "steps#graph_hours"
+  get  'steps/graph/days' => "steps#graph_days"
   resources :steps
+
   
   namespace :api do 
     post 'steps', :to=>"steps#create"

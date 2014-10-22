@@ -1,3 +1,5 @@
 <ul class="nav nav-sidebar">
-  <li class="active"><a href="#">Overview</a></li>
+  <li class="<%='active' if action_name == "index" %>"><a href="/steps">Overview</a></li>
+  <li class="<%='active' if action_name == "graph_hours" %>"><a href="/steps/graph/hours">Graph of Hours</a></li>
+  <li class="<%='action' if action_name == "graph_days" %>"><a href="/steps/graph/days">Graph of Days</a></li>
 </ul>

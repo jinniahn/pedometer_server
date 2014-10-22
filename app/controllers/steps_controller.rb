@@ -27,13 +27,19 @@ class StepsController < ApplicationController
   def graph_hours
     @steps = current_user.steps    
 
+    begin
+      @date = DateTime.now
+      if params[:date] 
+        @date = DateTime.strptime(params[:date], "%Y-%m-%dT%H:%M:%S")
+      end
+    end
+
+    @prev_date = @date - 1.hour
+    @next_date = @date + 1.hour
+
     respond_to do |format|
       format.html{ }
       format.json{ 
-        @date = Time.strptime(params[:date], "%Y-%m-%d %H:%M:%S")
-        
-        logger.debug(@date)
-
         begin_of_time = @date.beginning_of_hour
         end_of_time = @date.end_of_hour
 
@@ -57,14 +63,21 @@ class StepsController < ApplicationController
   end
 
   def graph_days
+
     @steps = current_user.steps
+    begin
+      @date = DateTime.now
+      if params[:date] 
+        @date = Date.strptime(params[:date], "%Y-%m-%d")
+      end
+    end
+
+    @prev_date = @date - 1.day
+    @next_date = @date + 1.day
+        
     respond_to do |format|
       format.html{ }
       format.json{ 
-        @date = Date.strptime(params[:date], "%Y-%m-%d")
-        
-        logger.debug(@date)
-
         begin_of_time = @date.beginning_of_day
         end_of_time = @date.end_of_day
 

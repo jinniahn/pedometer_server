@@ -13,10 +13,19 @@
 	    
 	  </div>
 	</div>
+	<div class="row">
+	  <a href="/steps/graph/days?date=<%=@prev_date.strftime("%Y-%m-%d")%>"> &lt; </a>
+	  <%= @date.strftime("%Y-%m-%d") %>
+	  <a href="/steps/graph/days?date=<%=@next_date.strftime("%Y-%m-%d")%>"> &gt; </a>
+	</div>
       </div>
     </div>
   </div>
 </div>
+
+
+
+
 
 
 <% content_for :js_part do %>
@@ -90,7 +99,7 @@
 
     var today = new Date
 
-    var date=today.getFullYear()+"-"+(today.getMonth()+1)+"-"+today.getDate();
+    var date="<%= @date.strftime("%Y-%m-%d") %>"
 
     d3.json('/steps/graph/days.json?date='+date)
     	.header("X-CSRF-Token", token)

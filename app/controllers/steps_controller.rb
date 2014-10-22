@@ -40,12 +40,14 @@ class StepsController < ApplicationController
     respond_to do |format|
       format.html{ }
       format.json{ 
+        @data = {}
+
+        # extract data from model
         begin_of_time = @date.beginning_of_hour
         end_of_time = @date.end_of_hour
 
-        # extract data from model
         @steps = Step.where('user_id = ? and time between ? and ?', current_user.id, begin_of_time, end_of_time)
-        @data = {}
+
         @steps.each do |step|
           date = step.time.strftime("%Y-%m-%d %H:%M:00")
           item = if @data.has_key? date then 
@@ -78,23 +80,28 @@ class StepsController < ApplicationController
     respond_to do |format|
       format.html{ }
       format.json{ 
-        begin_of_time = @date.beginning_of_day
-        end_of_time = @date.end_of_day
 
-        # extract data from model
-        @steps = Step.where('user_id = ? and time between ? and ?', current_user.id, begin_of_time, end_of_time)
+        #{{ DATA for infograph
+
         @data = {}
-        @steps.each do |step|
-          date = step.time.strftime("%Y-%m-%d %H:00:00")
-          item = if @data.has_key? date then 
-                   @data[date]
-                 else
-                   @data[date] = {date: date, total_of_steps: 0}
-                 end
-          item[:total_of_steps] += step.steps
-        end
 
-        logger.debug( @data )
+        # # extract data from model
+        # begin_of_time = @date.beginning_of_day
+        # end_of_time = @date.end_of_day
+        # @steps = Step.where('user_id = ? and time between ? and ?', current_user.id, begin_of_time, end_of_time)
+
+        # # statistic data
+        # @steps.each do |step|
+        #   date = step.time.strftime("%Y-%m-%d %H:00:00")
+        #   item = if @data.has_key? date then 
+        #            @data[date]
+        #          else
+        #            @data[date] = {date: date, total_of_steps: 0}
+        #          end
+        #   item[:total_of_steps] += step.steps
+        # end
+
+        #}} END
         
         render :json => @data.values.to_json 
       }
